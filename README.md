@@ -24,7 +24,7 @@ La aplicación permite:
 
 ## Tecnologías Usadas
 
-- **Node.js**: Utilizad0 para crear y ejecutar el backend de la aplicación.
+- **Node.js**: Utilizado para crear y ejecutar el backend de la aplicación.
 - **Express.js**: Framework de Node.js para construir la API RESTful.
 - **MySQL** Base de datos para almacenar y gestionar los mazos y tarjetas
 - **Railway**: Para el despliegue de la aplicacion.
