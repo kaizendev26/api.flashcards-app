@@ -31,3 +31,19 @@ export const getCardsByDeck = async (req, res) => {
     return res.status(500).json({ message: error });
   }
 };
+
+export const getCardsForReview = async (req, res) => {
+  try {
+    const { userId, deckId } = req.params;
+    console.log(req.params);
+
+    const [rows] = await pool.query("call getCardsForReview(?,?)", [
+      userId,
+      deckId,
+    ]);
+    console.log(rows);
+    res.json(rows[0]);
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};
