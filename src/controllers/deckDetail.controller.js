@@ -4,7 +4,7 @@ import { formatDistance, subDays, parseISO } from "date-fns";
 export const getDeckDetail = async (req, res) => {
   try {
     const { userId, deckId } = req.params;
-    // console.log(req.params);
+    console.log(req.params);
 
     const [rows] = await pool.query("call getDeckDetail(?,?)", [
       userId,
@@ -17,17 +17,52 @@ export const getDeckDetail = async (req, res) => {
   }
 };
 
-export const getCardsByDeck = async (req, res) => {
+export const deckExist = async (req, res) => {
   try {
     const { userId, deckId } = req.params;
-    // console.log(req.params);
+    console.log(req.params);
+    const [rows] = await pool.query("call deckExist(?,?)", [userId, deckId]);
+    // console.log(rows);
+    res.json(rows[0][0]);
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};
 
-    const [rows] = await pool.query("call getCardsByDeck(?,?)", [
+export const getCardsByDeck = async (req, res) => {
+  try {
+    const { userId, deckId, pageInit } = req.params;
+
+    console.log(pageInit);
+
+    const [rows] = await pool.query("call getCardsByDeck2(?,?,?)", [
       userId,
       deckId,
+      pageInit,
     ]);
-    // console.log(rows);
-    res.json(rows[0]);
+
+    const cardsByDeck = rows[0].map((card) => {
+      let timeUntil = "";
+      if (card.dueDate != null && new Date(card.dueDate) < new Date()) {
+        timeUntil = "Study again";
+      } else {
+        timeUntil =
+          card.dueDate != null
+            ? formatDistance(card.dueDate, new Date(), {
+                addSuffix: true,
+              })
+            : "";
+      }
+
+      return {
+        ...card,
+        timeUntil,
+      };
+    });
+
+    console.log(cardsByDeck.length);
+
+    res.json(cardsByDeck);
   } catch (error) {
     return res.status(500).json({ message: error });
   }
@@ -39,6 +74,23 @@ export const getCardsForReview = async (req, res) => {
     // console.log(req.params);
 
     const [rows] = await pool.query("call getCardsForReview(?,?)", [
+      userId,
+      deckId,
+    ]);
+
+    res.json(rows[0]);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error });
+  }
+};
+
+export const getCardsForToday = async (req, res) => {
+  try {
+    const { userId, deckId } = req.params;
+    // console.log(req.params);
+
+    const [rows] = await pool.query("call getCardsForToday(?,?)", [
       userId,
       deckId,
     ]);
@@ -67,7 +119,7 @@ export const saveChangeStudy = async (req, res) => {
 export const hasCardsForReview = async (req, res) => {
   try {
     const { userId, deckId } = req.params;
-    // console.log(req.params);
+    console.log(req.params);
 
     const [rows] = await pool.query("call hasCardsToReview(?,?)", [
       userId,

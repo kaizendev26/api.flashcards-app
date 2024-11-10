@@ -1,20 +1,26 @@
 import { Router } from "express";
 import {
   getDeckDetail,
+  deckExist,
   getCardsByDeck,
   getCardsForReview,
   saveChangeStudy,
   hasCardsForReview,
   getNextReviewDate,
+  getCardsForToday,
 } from "../controllers/deckDetail.controller.js";
 
 const router = Router();
 
-router.get("/deck/:userId/:deckId", getDeckDetail);
-router.get("/deck/cards/:userId/:deckId", getCardsByDeck);
-router.get("/deck/cards/review/:userId/:deckId", hasCardsForReview);
-router.get("/deck/cards/next-review/:userId/:deckId", getNextReviewDate);
-router.get("/study/cards/:userId/:deckId", getCardsForReview);
+router.get("/deck/cards-by-deck/:userId/:deckId/:pageInit", getCardsByDeck);
+router.get("/deck/cards-for-today/:userId/:deckId", getCardsForToday);
+router.get("/has/cards-for-review/:userId/:deckId", hasCardsForReview);
+router.get("/deck/next-review-date/:userId/:deckId", getNextReviewDate);
+router.get("/study/review-cards/:userId/:deckId", getCardsForReview);
+
+router.get("/deckDetail/:userId/:deckId", getDeckDetail);
+router.get("/has/deck/:userId/:deckId", deckExist);
+
 router.post("/study/cards/update", saveChangeStudy);
 
 export default router;
