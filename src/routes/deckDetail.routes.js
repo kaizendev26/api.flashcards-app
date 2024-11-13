@@ -8,6 +8,7 @@ import {
   hasCardsForReview,
   getNextReviewDate,
   getCardsForToday,
+  addCard,
 } from "../controllers/deckDetail.controller.js";
 
 const router = Router();
@@ -22,5 +23,6 @@ router.get("/deckDetail/:userId/:deckId", getDeckDetail);
 router.get("/has/deck/:userId/:deckId", deckExist);
 
 router.post("/study/cards/update", saveChangeStudy);
+router.post("/deckDetail/add-card", addCard);
 
 export default router;

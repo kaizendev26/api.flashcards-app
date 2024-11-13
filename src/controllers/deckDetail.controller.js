@@ -152,3 +152,21 @@ export const getNextReviewDate = async (req, res) => {
     return res.status(500).json({ message: error });
   }
 };
+
+export const addCard = async (req, res) => {
+  try {
+    const { deckId, front, back } = req.body;
+    const [rows] = await pool.query("call addCard(?,?,?)", [
+      deckId,
+      front,
+      back,
+    ]);
+    const response = rows[0];
+    console.log(response);
+
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error });
+  }
+};
