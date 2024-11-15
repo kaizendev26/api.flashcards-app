@@ -12,7 +12,9 @@ export const authUser = async (req, res) => {
     console.log(user);
 
     if (!user) {
-      return res.status(401).json({ error: "User not found" });
+      return res.status(401).json({
+        error: "We couldn't log you in. Please check your email and password.",
+      });
     }
 
     const passWordCorrect = await comparePassword(
@@ -23,11 +25,13 @@ export const authUser = async (req, res) => {
     if (passWordCorrect) {
       return res.send(user);
     } else {
-      return res.status(401).json({ error: "Incorrect credentials" });
+      return res.status(401).json({
+        error: "We couldn't log you in. Please check your email and password.",
+      });
     }
   } catch (error) {
     // console.log(error);
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ error });
   }
 };
 
@@ -41,16 +45,17 @@ export const registerUser = async (req, res) => {
       email,
       passwordHash,
     ]);
-    const userId = rows[0];
+    const user = rows[0];
 
-    if (!userId) {
-      return res.status(401).json({ message: "User already exists" });
+    if (!user) {
+      return res.status(401).json({
+        error: "This email is already associated with an existing account.",
+      });
     }
-    console.log(userId);
-    return res.send(userId);
+    return res.send(user);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ error});
   }
 };
 
