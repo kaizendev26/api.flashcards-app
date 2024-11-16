@@ -33,7 +33,7 @@ export const getCardsByDeck = async (req, res) => {
   try {
     const { userId, deckId, pageInit } = req.params;
 
-    console.log(pageInit);
+    // console.log(pageInit);
 
     const [rows] = await pool.query("call getCardsByDeck2(?,?,?)", [
       userId,
@@ -41,14 +41,17 @@ export const getCardsByDeck = async (req, res) => {
       pageInit,
     ]);
 
+    const now = new Date();
+
     const cardsByDeck = rows[0].map((card) => {
       let timeUntil = "";
-      if (card.dueDate != null && new Date(card.dueDate) < new Date()) {
+      const dueDate = new Date(card.dueDate);
+      if (card.dueDate != null && dueDate < now) {
         timeUntil = "Study again";
       } else {
         timeUntil =
           card.dueDate != null
-            ? formatDistance(card.dueDate, new Date(), {
+            ? formatDistance(dueDate, now, {
                 addSuffix: true,
               })
             : "";
@@ -60,10 +63,11 @@ export const getCardsByDeck = async (req, res) => {
       };
     });
 
-    console.log(cardsByDeck.length);
+    console.log(cardsByDeck);
 
     res.json(cardsByDeck);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: error });
   }
 };
