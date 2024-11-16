@@ -150,8 +150,11 @@ export const getNextReviewDate = async (req, res) => {
     ]);
 
     const { dueDate } = rows[0][0];
+    console.log(dueDate);
 
-    const timeUntil = formatDistance(dueDate, new Date(), { addSuffix: true });
+    const _dueDate = new Date(dueDate)
+
+    const timeUntil = formatDistance(_dueDate, new Date(), { addSuffix: true });
 
     res.json(timeUntil);
   } catch (error) {
