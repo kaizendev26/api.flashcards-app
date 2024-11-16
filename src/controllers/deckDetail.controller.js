@@ -46,6 +46,7 @@ export const getCardsByDeck = async (req, res) => {
     const cardsByDeck = rows[0].map((card) => {
       let timeUntil = "";
       const dueDate = new Date(card.dueDate);
+      console.log(card.dueDate)
       if (card.dueDate != null && dueDate < now) {
         timeUntil = "Study again";
       } else {
@@ -57,13 +58,15 @@ export const getCardsByDeck = async (req, res) => {
             : "";
       }
 
+      // console.log({...card,timeUntil});
+
       return {
         ...card,
         timeUntil,
       };
     });
 
-    console.log(cardsByDeck);
+    
 
     res.json(cardsByDeck);
   } catch (error) {

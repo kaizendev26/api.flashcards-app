@@ -14,4 +14,5 @@ export const pool = createPool({
   port: DB_PORT,
   database: DB_DATABASE,
   decimalNumbers: true,
+  timezone: '-06:00'
 });
