@@ -9,6 +9,10 @@ import {
   getNextReviewDate,
   getCardsForToday,
   addCard,
+  editCard,
+  deleteCard,
+  deleteDeck,
+  resetProgress
 } from "../controllers/deckDetail.controller.js";
 
 const router = Router();
@@ -24,5 +28,9 @@ router.get("/has/deck/:userId/:deckId", deckExist);
 
 router.post("/study/cards/update", saveChangeStudy);
 router.post("/deckDetail/add-card", addCard);
+router.post("/deck-config/reset-progress", resetProgress);
+router.put("/deck-detail/card/edit-card", editCard);
+router.put("/deck-detail/card/delete-card", deleteCard);
+router.put("/deck-detail/delete-deck", deleteDeck);
 
 export default router;

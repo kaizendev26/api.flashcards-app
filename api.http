@@ -1,0 +1,9 @@
+
+### delete a deck
+PUT http://localhost:3000/api/deck-detail/delete-deck
+Content-Type: application/json
+
+{
+    "userId": "1",
+    "deckId": "10"
+}

@@ -45,7 +45,7 @@ export const registerUser = async (req, res) => {
       email,
       passwordHash,
     ]);
-    const user = rows[0];
+    const user = rows[0][0];
 
     if (!user) {
       return res.status(401).json({

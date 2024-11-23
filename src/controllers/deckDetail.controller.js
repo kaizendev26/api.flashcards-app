@@ -116,6 +116,7 @@ export const saveChangeStudy = async (req, res) => {
     const [rows] = await pool.query("call saveChangesStudy(?)", [jsonCards]);
     const [response] = rows[0];
 
+
     res.send(response);
   } catch (error) {
     console.log(error);
@@ -150,9 +151,10 @@ export const getNextReviewDate = async (req, res) => {
     ]);
 
     const { dueDate } = rows[0][0];
-    console.log(dueDate);
+    
 
     const _dueDate = new Date(dueDate)
+    console.log(_dueDate);
 
     const timeUntil = formatDistance(_dueDate, new Date(), { addSuffix: true });
 
@@ -165,14 +167,14 @@ export const getNextReviewDate = async (req, res) => {
 
 export const addCard = async (req, res) => {
   try {
-    const { deckId, front, back } = req.body;
-    const [rows] = await pool.query("call addCard(?,?,?)", [
+    const { userId, deckId, front, back } = req.body;
+    const [rows] = await pool.query("call addCard(?,?,?,?)", [
+      userId,
       deckId,
       front,
       back,
     ]);
     const response = rows[0];
-    console.log(response);
 
     res.send(response);
   } catch (error) {
@@ -180,3 +182,80 @@ export const addCard = async (req, res) => {
     return res.status(500).json({ message: error });
   }
 };
+
+export const editCard = async (req, res) => {
+  try {
+    const { userId, deckId,cardId, front, back } = req.body;
+    const [rows] = await pool.query("call updateCard(?,?,?,?,?)", [
+      userId,
+      deckId,
+      cardId,
+      front,
+      back,
+    ]);
+    const {rows_affected} = rows[0][0];
+    console.log(rows_affected);
+    if (rows_affected > 0) return res.status(200).send(true)
+    
+    return res.send(false);
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error });
+  }
+};
+
+export const deleteCard = async (req, res) => {
+  try {
+    const { userId, deckId,cardId} = req.body;
+    const [rows] = await pool.query("call deleteCard(?,?,?)", [
+      userId,
+      deckId,
+      cardId
+    ]);
+    const {rows_affected} = rows[0][0];
+    console.log(rows_affected);
+    if (rows_affected > 0) return res.status(200).send(true)
+    
+    return res.send(false);
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error });
+  }
+};
+
+export const deleteDeck = async (req, res) => {
+  try {
+    const { userId, deckId} = req.body;
+    const [rows] = await pool.query("call deleteDeck(?,?)", [
+      userId,
+      deckId
+    ]);
+    const {success} = rows[0][0];
+
+    if(success === "success") return res.status(200).send(true)
+
+    return res.send(false);
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error });
+  }
+};
+
+export const resetProgress = async (req, res) => {
+  try {
+    const { userId, deckId} = req.body;
+    const [rows] = await pool.query("call resetDeck(?,?)", [
+      userId,
+      deckId
+    ]);
+    const response = rows[0];
+
+    res.send(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error });
+  }
+}
